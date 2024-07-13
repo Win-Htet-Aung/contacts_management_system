@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "contacts-management-system"
+version = "0.1.0"
+description = "Assessment assigned by Ramesh."
+authors = ["Win Htet Aung <whaung1998@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = {extras = ["all"], version = "^0.111.0"}
+sqlalchemy = "^2.0.31"
+psycopg2 = "^2.9.9"
+python-dotenv = "^1.0.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
