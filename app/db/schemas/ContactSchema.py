@@ -11,24 +11,24 @@ class ContactCategoryEnum(str, Enum):
 
 
 class ContactBase(BaseModel):
-    first_name: str = ""
-    middle_name: str = ""
-    last_name: str = ""
-    image_id: int
-    category: str
+    first_name: str
+    middle_name: str
+    last_name: str
+    image_id: int|None = None
+    category: ContactCategoryEnum
     email: str
-    phone: str
-    company_name: str
-    birth_date: date
-    occupation: str
-    gender: str
-    country: str
-    city: str
-    address_line1: str
-    address_line2: str
-    state: str
-    zip_code: str
-    timezone: str
+    phone: str|None = None
+    company_name: str|None = None
+    birth_date: date|None = None
+    occupation: str|None = None
+    gender: str|None = None
+    country: str|None = None
+    city: str|None = None
+    address_line1: str|None = None
+    address_line2: str|None = None
+    state: str|None = None
+    zip_code: str|None = None
+    timezone: str|None = None
 
 
 class ContactCreate(ContactBase):
@@ -37,9 +37,9 @@ class ContactCreate(ContactBase):
 
 class Contact(ContactBase):
     id: int
-    created_by: int
+    created_by: int|None = None
     created_on: datetime
-    modified_by: int
+    modified_by: int|None = None
     modified_on: datetime
 
     class Config:
