@@ -1,6 +1,7 @@
 import jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
+from fastapi import Request, Response
 from .db.schemas import UserSchema
 from .config import settings
 
@@ -35,3 +36,12 @@ def decode_jwt(token: str) -> UserSchema.User | None:
             return None
     except:
         return None
+
+
+def created_with_location(request: Request, obj_id: str) -> Response:
+    location = f"{request.url}"
+    if location.endswith("/"):
+        location += obj_id
+    else:
+        location += f"/{obj_id}"
+    return Response(None, status_code=201, headers={"Location": location})

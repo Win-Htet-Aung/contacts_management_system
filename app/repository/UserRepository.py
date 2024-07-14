@@ -29,3 +29,15 @@ def create_user(db: Session, user: UserSchema.UserCreate):
     db.commit()
     db.refresh(db_user)
     return db_user
+
+
+def update_user(db: Session, user_id: int, user: UserSchema.UserUpdate):
+    db.query(UserModel.User).filter(UserModel.User.id == user_id).update(
+        user.model_dump()
+    )
+    db.commit()
+
+
+def delete_user(db: Session, user_id: int):
+    db.query(UserModel.User).filter(UserModel.User.id == user_id).delete()
+    db.commit()

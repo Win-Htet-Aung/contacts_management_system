@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request, Response, status
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from ..db.schemas import JwtSchema
@@ -13,7 +13,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
     return AuthService.login(form_data, db)
 
 
-# @contact_router.get("/logout", response_model=list[ContactSchema.Contact])
-# def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-#     contacts = ContactRepository.get_contacts(db, skip=skip, limit=limit)
-#     return contacts
+@auth_router.post("/logout")
+def logout(request: Request):
+    print(request)
+    return Response(status_code=status.http_2)

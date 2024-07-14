@@ -20,6 +20,12 @@ class UserCreate(UserBase):
     password: str
 
 
+class UserUpdate(UserBase):
+    email: str
+    role: UserRoleEnum
+    is_active: bool
+
+
 class User(UserBase):
     id: int
     email: str
