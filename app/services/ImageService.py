@@ -1,6 +1,6 @@
 import os
 from sqlalchemy.orm import Session
-from fastapi import UploadFile
+from fastapi import UploadFile, HTTPException, status
 from ..db.models import ContactModel
 from ..db.schemas import UserSchema, ImageSchema
 from ..repository import ImageRepository
@@ -25,7 +25,10 @@ def create_image(
 
 
 def get_image(db: Session, image_id: int):
-    return ImageRepository.get_image(db, image_id)
+    db_image = ImageRepository.get_image(db, image_id)
+    if db_image is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    return db_image
 
 
 def update_image(
@@ -48,6 +51,7 @@ def update_image(
 
 def delete_image(db: Session, image_id: int):
     db_image = get_image(db, image_id)
-    filename = f"app/{db_image.file_url}"
-    os.remove(filename)
-    ImageRepository.delete_image(db, image_id)
+    if db_image:
+        filename = f"app/{db_image.file_url}"
+        os.remove(filename)
+        ImageRepository.delete_image(db, image_id)

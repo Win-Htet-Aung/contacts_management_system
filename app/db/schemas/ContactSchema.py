@@ -10,13 +10,18 @@ class ContactCategoryEnum(str, Enum):
     EMPLOYEE = "Employees"
 
 
+class GenderEnum(str, Enum):
+    MALE = "male"
+    FEMALE = "female"
+    NOTTOSPECIFIED = "not to specified"
+
+
 class ContactBase(BaseModel):
     image_id: int | None = None
     phone: str | None = None
     company_name: str | None = None
     birth_date: date | None = None
     occupation: str | None = None
-    gender: str | None = None
     country: str | None = None
     city: str | None = None
     address_line1: str | None = None
@@ -31,6 +36,7 @@ class ContactCreate(ContactBase):
     middle_name: str = ""
     last_name: str = ""
     category: ContactCategoryEnum
+    gender: GenderEnum
     email: str
 
 
@@ -39,6 +45,7 @@ class ContactUpdate(ContactBase):
     middle_name: str | None = None
     last_name: str | None = None
     category: ContactCategoryEnum | None = None
+    gender: GenderEnum | None = None
     email: str | None = None
 
 

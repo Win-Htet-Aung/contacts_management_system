@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from fastapi import UploadFile
+from fastapi import UploadFile, HTTPException, status
 from ..db.schemas import ContactSchema, UserSchema
 from ..repository import ContactRepository
 from . import ImageService
@@ -27,7 +27,10 @@ def create_contact(
 
 
 def get_contact(db: Session, contact_id: int):
-    return ContactRepository.get_contact(db, contact_id)
+    db_contact = ContactRepository.get_contact(db, contact_id)
+    if db_contact is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
+    return db_contact
 
 
 def update_contact(
