@@ -11,35 +11,42 @@ class ContactCategoryEnum(str, Enum):
 
 
 class ContactBase(BaseModel):
-    first_name: str
-    middle_name: str
-    last_name: str
-    image_id: int|None = None
-    category: ContactCategoryEnum
-    email: str
-    phone: str|None = None
-    company_name: str|None = None
-    birth_date: date|None = None
-    occupation: str|None = None
-    gender: str|None = None
-    country: str|None = None
-    city: str|None = None
-    address_line1: str|None = None
-    address_line2: str|None = None
-    state: str|None = None
-    zip_code: str|None = None
-    timezone: str|None = None
+    image_id: int | None = None
+    phone: str | None = None
+    company_name: str | None = None
+    birth_date: date | None = None
+    occupation: str | None = None
+    gender: str | None = None
+    country: str | None = None
+    city: str | None = None
+    address_line1: str | None = None
+    address_line2: str | None = None
+    state: str | None = None
+    zip_code: str | None = None
+    timezone: str | None = None
 
 
 class ContactCreate(ContactBase):
-    pass
+    first_name: str = ""
+    middle_name: str = ""
+    last_name: str = ""
+    category: ContactCategoryEnum
+    email: str
 
 
-class Contact(ContactBase):
+class ContactUpdate(ContactBase):
+    first_name: str | None = None
+    middle_name: str | None = None
+    last_name: str | None = None
+    category: ContactCategoryEnum | None = None
+    email: str | None = None
+
+
+class Contact(ContactCreate):
     id: int
-    created_by: int|None = None
+    created_by: int
     created_on: datetime
-    modified_by: int|None = None
+    modified_by: int
     modified_on: datetime
 
     class Config:

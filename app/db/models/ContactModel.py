@@ -29,3 +29,7 @@ class Contact(Base):
     created_on = Column(DateTime, default=datetime.now())
     modified_by = Column(Integer, ForeignKey("users.id"))
     modified_on = Column(DateTime, default=datetime.now())
+
+    @staticmethod
+    def get_model_name() -> str:
+        return "Contact"

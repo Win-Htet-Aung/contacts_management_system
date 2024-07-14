@@ -1,7 +1,7 @@
 import jwt
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
-from fastapi import Request, Response
+from fastapi import Request, Response, UploadFile
 from .db.schemas import UserSchema
 from .config import settings
 
@@ -45,3 +45,8 @@ def created_with_location(request: Request, obj_id: str) -> Response:
     else:
         location += f"/{obj_id}"
     return Response(None, status_code=201, headers={"Location": location})
+
+
+def save_file(file: UploadFile, dir: str):
+    print("saving", file)
+    print(file.name)

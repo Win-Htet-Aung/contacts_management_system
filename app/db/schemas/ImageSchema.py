@@ -7,11 +7,15 @@ class ImageBase(BaseModel):
     file_url: str
 
 
-class ContactCreate(ImageBase):
+class ImageCreate(ImageBase):
     pass
 
 
-class Contact(ImageBase):
+class ImageUpdate(ImageBase):
+    pass
+
+
+class Image(ImageBase):
     id: int
     created_by: int
     created_on: datetime

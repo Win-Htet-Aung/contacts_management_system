@@ -13,6 +13,8 @@ psycopg2 = "^2.9.9"
 python-dotenv = "^1.0.1"
 pyjwt = "^2.8.0"
 passlib = {extras = ["bcrypt"], version = "^1.7.4"}
+python-multipart = "^0.0.9"
+pyfa-converter-v2 = "^2.0.0rc1"
 
 
 [build-system]

@@ -791,6 +791,21 @@ toml = ["tomli (>=2.0.1)"]
 yaml = ["pyyaml (>=6.0.1)"]
 
 [[package]]
+name = "pyfa-converter-v2"
+version = "2.0.0rc1"
+description = "Pydantic to FastAPI model converter."
+optional = false
+python-versions = ">=3.8.1,<4.0"
+files = [
+    {file = "pyfa_converter_v2-2.0.0rc1-py3-none-any.whl", hash = "sha256:575469d88b3917ff3464b145ae437efb499cbc8dd105733f045846747661e561"},
+    {file = "pyfa_converter_v2-2.0.0rc1.tar.gz", hash = "sha256:d505466b29a90d6d7455b3efa77d77eaefa49dcd506670756685d15d5f439843"},
+]
+
+[package.dependencies]
+fastapi = ">=0.100"
+pydantic = ">=2"
+
+[[package]]
 name = "pygments"
 version = "2.18.0"
 description = "Pygments is a syntax highlighting package written in Python."
@@ -1408,4 +1423,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "ad634b8bcf09b09e48342eb872e643bfe2c92684beaba5bc3f841e96ae6ed567"
+content-hash = "5af06daadefb7dd23b143792d6d7af9bd7745a98be481d0d6b8c944f1fecee2a"
