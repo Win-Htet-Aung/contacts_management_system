@@ -15,15 +15,24 @@ def get_contact(db: Session, contact_id: int):
     )
 
 
-def get_contacts(db: Session, page: int, size: int, sort: str):
+def get_contacts(
+    db: Session,
+    page: int,
+    size: int,
+    sort: str,
+    contact_filter: ContactModel.ContactFilter,
+):
+    print("filter =>", contact_filter)
     sort_func = asc
-    if sort.startswith('-'):
+    if sort.startswith("-"):
         sort = sort[1:]
         sort_func = desc
     pagination_params = Params(page=page, size=size)
     return paginate(
         db,
-        select(ContactModel.Contact).order_by(sort_func(ContactModel.Contact.__dict__[sort])),
+        contact_filter.filter(select(ContactModel.Contact)).order_by(
+            sort_func(ContactModel.Contact.__dict__[sort])
+        ),
         pagination_params,
     )
 

@@ -1,4 +1,5 @@
 from sqlalchemy import Date, Column, Integer, String, ForeignKey, DateTime
+from fastapi_filter.contrib.sqlalchemy.filter import Filter
 from datetime import datetime
 from ..base_class import Base
 
@@ -33,3 +34,14 @@ class Contact(Base):
     @staticmethod
     def get_model_name() -> str:
         return "Contact"
+
+
+class ContactFilter(Filter):
+    category__in: list[str] = []
+    city__in: list[str] = []
+    country__in: list[str] = []
+    company_name__in: list[str] = []
+    occupation__in: list[str] = []
+
+    class Constants(Filter.Constants):
+        model = Contact

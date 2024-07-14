@@ -10,7 +10,9 @@ from fastapi import (
 from sqlalchemy.orm import Session
 from pyfa_converter_v2 import FormDepends
 from fastapi_pagination import Page
+from fastapi_filter import FilterDepends
 from ..db.schemas import ContactSchema, UserSchema
+from ..db.models import ContactModel
 from ..repository import ContactRepository
 from ..services import ContactService
 from ..dependencies import get_db, get_current_user
@@ -44,6 +46,9 @@ def create_contact(
 
 @contact_router.get("/", response_model=Page[ContactSchema.Contact])
 def read_contacts(
+    contact_filter: ContactModel.ContactFilter = FilterDepends(
+        ContactModel.ContactFilter
+    ),
     page: int = 1,
     size: int = 20,
     sort: str = "created_on",
@@ -56,7 +61,7 @@ def read_contacts(
             UserSchema.UserRoleEnum.STAFF,
         ]:
             contacts = ContactRepository.get_contacts(
-                db, page=page, size=size, sort=sort
+                db, page=page, size=size, sort=sort, contact_filter=contact_filter
             )
             return contacts
         else:
