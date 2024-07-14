@@ -20,7 +20,7 @@ def create_contact(
         ContactRepository.update_contact(
             db,
             created_contact.id,
-            ContactSchema.ContactUpdate(**created_contact.__dict__),
+            ContactSchema.ContactUpdate(**created_contact.__dict__).model_dump(),
             current_user,
         )
     return created_contact

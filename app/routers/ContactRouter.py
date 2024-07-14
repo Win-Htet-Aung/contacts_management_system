@@ -9,6 +9,7 @@ from fastapi import (
 )
 from sqlalchemy.orm import Session
 from pyfa_converter_v2 import FormDepends
+from fastapi_pagination import Page
 from ..db.schemas import ContactSchema, UserSchema
 from ..repository import ContactRepository
 from ..services import ContactService
@@ -41,10 +42,11 @@ def create_contact(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
 
-@contact_router.get("/", response_model=list[ContactSchema.Contact])
+@contact_router.get("/", response_model=Page[ContactSchema.Contact])
 def read_contacts(
-    skip: int = 0,
-    limit: int = 100,
+    page: int = 1,
+    size: int = 20,
+    sort: str = "created_on",
     db: Session = Depends(get_db),
     current_user: UserSchema.User | None = Depends(get_current_user),
 ):
@@ -53,7 +55,9 @@ def read_contacts(
             UserSchema.UserRoleEnum.ADMIN,
             UserSchema.UserRoleEnum.STAFF,
         ]:
-            contacts = ContactRepository.get_contacts(db, skip=skip, limit=limit)
+            contacts = ContactRepository.get_contacts(
+                db, page=page, size=size, sort=sort
+            )
             return contacts
         else:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
