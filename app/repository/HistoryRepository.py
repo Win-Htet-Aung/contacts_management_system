@@ -1,10 +1,6 @@
-from datetime import datetime
 from sqlalchemy.orm import Session
-from fastapi_pagination.ext.sqlalchemy import paginate
-from fastapi_pagination import Params
-from sqlalchemy import select, desc, asc
-from ..db.models import HistoryModel
-from ..db.schemas import HistorySchema, UserSchema
+from ..db.models import HistoryModel, HistoryDetailsModel
+from ..db.schemas import HistorySchema, UserSchema, HistoryDetailsSchema
 
 
 def create_history(
@@ -16,3 +12,15 @@ def create_history(
     db.commit()
     db.refresh(db_history)
     return db_history
+
+
+def create_history_details(
+    db: Session, history_details: HistoryDetailsSchema.HistoryDetailsCreate
+):
+    db_history_details = HistoryDetailsModel.HistoryDetails(
+        **history_details.model_dump()
+    )
+    db.add(db_history_details)
+    db.commit()
+    db.refresh(db_history_details)
+    return db_history_details

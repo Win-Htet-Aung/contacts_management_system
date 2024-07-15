@@ -29,8 +29,9 @@ def create_contact(
         activity=HistorySchema.ActivityEnum.CREATE,
     )
     payload = ContactSchema.ContactCreate(**created_contact.__dict__).model_dump()
+    old_data = {k: None for k in payload}
     HistoryService.create_history(
-        db, history_create, created_contact.id, payload, current_user
+        db, history_create, old_data, payload, current_user
     )
     return created_contact
 
@@ -63,7 +64,8 @@ def update_contact(
     else:
         if db_contact.image_id:
             ImageService.delete_image(db, db_contact.image_id)
-    ContactRepository.update_contact(db, contact_id, update_data, current_user)
+    old_data = ContactSchema.Contact(**db_contact.__dict__).model_dump()
+    ContactRepository.update_contact(db, contact_id, update_data.copy(), current_user)
     history_create = HistorySchema.HistoryCreate(
         object_type="Contact",
         object_name=f"Contact-{db_contact.id}",
@@ -71,7 +73,7 @@ def update_contact(
     )
     payload = update_data
     HistoryService.create_history(
-        db, history_create, db_contact.id, payload, current_user
+        db, history_create, old_data, payload, current_user
     )
 
 
@@ -84,8 +86,7 @@ def delete_contact(db: Session, contact_id: int, current_user: UserSchema.User):
         object_name=f"Contact-{db_contact.id}",
         activity=HistorySchema.ActivityEnum.DELETE,
     )
-    payload = {}
     HistoryService.create_history(
-        db, history_create, db_contact.id, payload, current_user
+        db, history_create, {}, {}, current_user
     )
     ContactRepository.delete_contact(db, contact_id)

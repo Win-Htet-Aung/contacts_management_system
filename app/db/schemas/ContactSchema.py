@@ -15,6 +15,9 @@ class GenderEnum(str, Enum):
     FEMALE = "female"
     NOTTOSPECIFIED = "not to specified"
 
+    def __str__(self):
+        return self.value
+
 
 class ContactBase(BaseModel):
     middle_name: str | None = None

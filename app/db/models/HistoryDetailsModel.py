@@ -7,6 +7,7 @@ class HistoryDetails(Base):
 
     id = Column(Integer, primary_key=True)
     history_id = Column(Integer, ForeignKey("histories.id"))
+    field_name = Column(String)
     previous_value = Column(String, nullable=True)
     latest_value = Column(String, nullable=True)
 
