@@ -27,9 +27,9 @@ class Contact(Base):
     zip_code = Column(String, nullable=True)
     timezone = Column(String, nullable=True)
     created_by = Column(Integer, ForeignKey("users.id"))
-    created_on = Column(DateTime, default=datetime.now())
+    created_on = Column(DateTime, default=datetime.now)
     modified_by = Column(Integer, ForeignKey("users.id"))
-    modified_on = Column(DateTime, default=datetime.now())
+    modified_on = Column(DateTime)
 
     @staticmethod
     def get_model_name() -> str:

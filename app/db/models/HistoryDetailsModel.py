@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, ForeignKey, String
+from fastapi_filter.contrib.sqlalchemy.filter import Filter
 from ..base_class import Base
 
 
@@ -14,3 +15,10 @@ class HistoryDetails(Base):
     @staticmethod
     def get_model_name() -> str:
         return "HistoryDetails"
+
+
+class HistoryDetailsFilter(Filter):
+    field_name__in: list[str] = []
+
+    class Constants(Filter.Constants):
+        model = HistoryDetails

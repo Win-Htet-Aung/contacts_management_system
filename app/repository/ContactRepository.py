@@ -42,6 +42,7 @@ def create_contact(
     db_contact = ContactModel.Contact(**contact.model_dump())
     db_contact.created_by = current_user["id"]
     db_contact.modified_by = current_user["id"]
+    db_contact.modified_on = datetime.now()
     db.add(db_contact)
     db.commit()
     db.refresh(db_contact)

@@ -51,6 +51,7 @@ def update_contact(
     current_user: UserSchema.User,
 ):
     db_contact = get_contact(db, contact_id)
+    old_data = ContactSchema.Contact(**db_contact.__dict__).model_dump()
     update_data = contact.model_dump()
     if image:
         if db_contact.image_id:
@@ -64,7 +65,6 @@ def update_contact(
     else:
         if db_contact.image_id:
             ImageService.delete_image(db, db_contact.image_id)
-    old_data = ContactSchema.Contact(**db_contact.__dict__).model_dump()
     ContactRepository.update_contact(db, contact_id, update_data.copy(), current_user)
     history_create = HistorySchema.HistoryCreate(
         object_type="Contact",

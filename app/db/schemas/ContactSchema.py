@@ -9,6 +9,9 @@ class ContactCategoryEnum(str, Enum):
     PARTNER = "Partners"
     EMPLOYEE = "Employees"
 
+    def __str__(self):
+        return self.value
+
 
 class GenderEnum(str, Enum):
     MALE = "male"

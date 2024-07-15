@@ -32,17 +32,38 @@ def create_user(
 
 
 @user_router.get("/", response_model=list[UserSchema.User])
-def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-    users = UserRepository.get_users(db, skip=skip, limit=limit)
-    return users
+def read_users(
+    skip: int = 0,
+    limit: int = 100,
+    db: Session = Depends(get_db),
+    current_user: UserSchema.User | None = Depends(get_current_user),
+):
+    if current_user:
+        if current_user["role"] in [UserSchema.UserRoleEnum.ADMIN]:
+            users = UserRepository.get_users(db, skip=skip, limit=limit)
+            return users
+        else:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
+    else:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
 
 @user_router.get("/{user_id}", response_model=UserSchema.User)
-def read_user(user_id: int, db: Session = Depends(get_db)):
-    db_user = UserRepository.get_user(db, user_id=user_id)
-    if db_user is None:
-        raise HTTPException(status_code=404, detail="User not found")
-    return db_user
+def read_user(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: UserSchema.User | None = Depends(get_current_user),
+):
+    if current_user:
+        if current_user["role"] in [UserSchema.UserRoleEnum.ADMIN]:
+            db_user = UserRepository.get_user(db, user_id=user_id)
+            if db_user is None:
+                raise HTTPException(status_code=404, detail="User not found")
+            return db_user
+        else:
+            raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
+    else:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
 
 @user_router.put("/{user_id}")

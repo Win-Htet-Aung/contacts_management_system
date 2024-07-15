@@ -9,6 +9,6 @@ class Image(Base):
     id = Column(Integer, primary_key=True)
     file_url = Column(String)
     created_by = Column(Integer, ForeignKey("users.id"))
-    created_on = Column(DateTime, default=datetime.now())
+    created_on = Column(DateTime, default=datetime.now)
     modified_by = Column(Integer, ForeignKey("users.id"))
-    modified_on = Column(DateTime, default=datetime.now())
+    modified_on = Column(DateTime)
