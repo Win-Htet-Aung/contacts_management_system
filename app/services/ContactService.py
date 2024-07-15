@@ -37,19 +37,23 @@ def update_contact(
     db: Session,
     contact_id: int,
     contact: ContactSchema.ContactUpdate,
-    image: UploadFile,
+    image: UploadFile | None,
     current_user: UserSchema.User,
 ):
     db_contact = get_contact(db, contact_id)
-    update_data = {k: v for k, v in contact.model_dump().items() if v is not None}
+    update_data = contact.model_dump()
     if image:
         if db_contact.image_id:
             ImageService.update_image(db, current_user, db_contact.image_id, image)
+            update_data["image_id"] = db_contact.image_id
         else:
             created_image = ImageService.create_image(
                 db, current_user, image, db_contact
             )
             update_data["image_id"] = created_image.id
+    else:
+        if db_contact.image_id:
+            ImageService.delete_image(db, db_contact.image_id)
     ContactRepository.update_contact(db, contact_id, update_data, current_user)
 
 

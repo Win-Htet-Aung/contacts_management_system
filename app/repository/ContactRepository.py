@@ -22,7 +22,6 @@ def get_contacts(
     sort: str,
     contact_filter: ContactModel.ContactFilter,
 ):
-    print("filter =>", contact_filter)
     sort_func = asc
     if sort.startswith("-"):
         sort = sort[1:]

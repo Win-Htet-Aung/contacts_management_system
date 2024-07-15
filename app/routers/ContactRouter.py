@@ -8,9 +8,11 @@ from fastapi import (
     Response,
 )
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 from pyfa_converter_v2 import FormDepends
 from fastapi_pagination import Page
 from fastapi_filter import FilterDepends
+from psycopg2.errors import UniqueViolation
 from ..db.schemas import ContactSchema, UserSchema
 from ..db.models import ContactModel
 from ..repository import ContactRepository
@@ -34,9 +36,13 @@ def create_contact(
             UserSchema.UserRoleEnum.ADMIN,
             UserSchema.UserRoleEnum.STAFF,
         ]:
-            created_contact = ContactService.create_contact(
-                db, contact, image, current_user
-            )
+            try:
+                created_contact = ContactService.create_contact(
+                    db, contact, image, current_user
+                )
+            except IntegrityError as e:
+                detail = e._message().split("\n")[-2]
+                raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=detail)
             return created_with_location(request, str(created_contact.id))
         else:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)

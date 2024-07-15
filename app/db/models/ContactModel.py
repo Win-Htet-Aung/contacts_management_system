@@ -13,7 +13,7 @@ class Contact(Base):
     last_name = Column(String, index=True)
     image_id = Column(Integer, ForeignKey("images.id"), nullable=True)
     category = Column(String, index=True)
-    email = Column(String)
+    email = Column(String, unique=True)
     phone = Column(String, nullable=True)
     company_name = Column(String, nullable=True)
     birth_date = Column(Date, nullable=True)

@@ -17,7 +17,6 @@ class GenderEnum(str, Enum):
 
 
 class ContactBase(BaseModel):
-    image_id: int | None = None
     phone: str | None = None
     company_name: str | None = None
     birth_date: date | None = None
@@ -51,6 +50,7 @@ class ContactUpdate(ContactBase):
 
 class Contact(ContactCreate):
     id: int
+    image_id: int | None = None
     created_by: int
     created_on: datetime
     modified_by: int
