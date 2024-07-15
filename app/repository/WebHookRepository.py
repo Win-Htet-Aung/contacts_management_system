@@ -36,6 +36,12 @@ def get_webhooks(
     )
 
 
+def get_webhooks_by_name(db: Session, name: WebHookSchema.NameEnum):
+    return (
+        db.query(WebHookModel.WebHook).filter(WebHookModel.WebHook.name == name).all()
+    )
+
+
 def create_webhook(
     db: Session, webhook: WebHookSchema.WebHookCreate, current_user: UserSchema.User
 ):

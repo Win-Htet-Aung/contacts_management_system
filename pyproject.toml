@@ -17,6 +17,7 @@ python-multipart = "^0.0.9"
 pyfa-converter-v2 = "^2.0.0rc1"
 fastapi-filter = {extras = ["sqlalchemy"], version = "^2.0.0"}
 fastapi-pagination = "^0.12.26"
+requests = "^2.32.3"
 
 
 [build-system]

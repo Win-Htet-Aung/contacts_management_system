@@ -3,7 +3,7 @@ from enum import Enum
 from datetime import datetime
 
 
-class ActivityEnum(str, Enum):
+class NameEnum(str, Enum):
     NOTIFICATION = "notification"
 
     def __str__(self):
@@ -11,7 +11,7 @@ class ActivityEnum(str, Enum):
 
 
 class WebHookBase(BaseModel):
-    name: str
+    name: NameEnum
     callback_url: str
 
 

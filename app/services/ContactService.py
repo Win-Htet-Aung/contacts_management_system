@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from fastapi import UploadFile, HTTPException, status
-from ..db.schemas import ContactSchema, UserSchema, HistorySchema
+from ..db.schemas import ContactSchema, UserSchema, HistorySchema, WebHookSchema
 from ..repository import ContactRepository
-from . import ImageService, HistoryService
+from . import ImageService, HistoryService, WebHookService
 
 
 def create_contact(
@@ -30,9 +30,9 @@ def create_contact(
     )
     payload = ContactSchema.ContactCreate(**created_contact.__dict__).model_dump()
     old_data = {k: None for k in payload}
-    HistoryService.create_history(
-        db, history_create, old_data, payload, current_user
-    )
+    HistoryService.create_history(db, history_create, old_data, payload, current_user)
+    webhook = WebHookService.WebHookHandler(db, WebHookSchema.NameEnum.NOTIFICATION)
+    webhook.handle(history=history_create, contact=contact)
     return created_contact
 
 
@@ -72,9 +72,9 @@ def update_contact(
         activity=HistorySchema.ActivityEnum.UPDATE,
     )
     payload = update_data
-    HistoryService.create_history(
-        db, history_create, old_data, payload, current_user
-    )
+    webhook = WebHookService.WebHookHandler(db, WebHookSchema.NameEnum.NOTIFICATION)
+    webhook.handle(history=history_create, contact=contact)
+    HistoryService.create_history(db, history_create, old_data, payload, current_user)
 
 
 def delete_contact(db: Session, contact_id: int, current_user: UserSchema.User):
@@ -86,7 +86,10 @@ def delete_contact(db: Session, contact_id: int, current_user: UserSchema.User):
         object_name=f"Contact-{db_contact.id}",
         activity=HistorySchema.ActivityEnum.DELETE,
     )
-    HistoryService.create_history(
-        db, history_create, {}, {}, current_user
+    HistoryService.create_history(db, history_create, {}, {}, current_user)
+    webhook = WebHookService.WebHookHandler(db, WebHookSchema.NameEnum.NOTIFICATION)
+    webhook.handle(
+        history=history_create,
+        contact=ContactSchema.ContactCreate(**db_contact.__dict__),
     )
     ContactRepository.delete_contact(db, contact_id)

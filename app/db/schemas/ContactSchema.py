@@ -37,6 +37,14 @@ class ContactBase(BaseModel):
     zip_code: str | None = None
     timezone: str | None = None
 
+    def full_name(self):
+        fname = self.first_name
+        if self.middle_name:
+            fname += " " + self.middle_name
+        if self.last_name:
+            fname += " " + self.last_name
+        return fname
+
 
 class ContactCreate(ContactBase):
     first_name: str

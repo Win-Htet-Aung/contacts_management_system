@@ -1,7 +1,35 @@
+import requests
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
-from ..db.schemas import UserSchema, WebHookSchema
+from ..db.schemas import UserSchema, WebHookSchema, HistorySchema, ContactSchema
 from ..repository import WebHookRepository
+
+
+class WebHookHandler:
+    def __init__(self, db: Session, name: WebHookSchema.NameEnum):
+        self.name = name
+        self.db = db
+
+    def targets(self) -> list[WebHookSchema.WebHookBase]:
+        return [
+            WebHookSchema.WebHookBase(**i.__dict__)
+            for i in WebHookRepository.get_webhooks_by_name(self.db, self.name)
+        ]
+
+    def notification_handler(self, target: WebHookSchema.WebHookBase, **kwargs):
+        history: HistorySchema.HistoryCreate = kwargs["history"]
+        contact: ContactSchema.ContactCreate = kwargs["contact"]
+        payload = {
+            "message": f"{contact.category} {history.object_type} {contact.full_name()} {history.activity} successfully!"
+        }
+        requests.post(url=target.callback_url, data=payload)
+
+    def handle(self, **kwargs):
+        handler_mapping = {
+            WebHookSchema.NameEnum.NOTIFICATION: self.notification_handler,
+        }
+        for target in self.targets():
+            handler_mapping[target.name](target, **kwargs)
 
 
 def create_webhook(
