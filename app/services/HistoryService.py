@@ -11,4 +11,5 @@ def create_history(
     payload: dict,
     current_user: UserSchema.User,
 ):
-    pass
+    activity = history.activity
+    created_history = HistoryRepository.create_history(db, history, current_user)

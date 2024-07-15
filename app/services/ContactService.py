@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 from fastapi import UploadFile, HTTPException, status
-from ..db.schemas import ContactSchema, UserSchema
+from ..db.schemas import ContactSchema, UserSchema, HistorySchema
 from ..repository import ContactRepository
-from . import ImageService
+from . import ImageService, HistoryService
 
 
 def create_contact(
@@ -23,6 +23,15 @@ def create_contact(
             ContactSchema.ContactUpdate(**created_contact.__dict__).model_dump(),
             current_user,
         )
+    history_create = HistorySchema.HistoryCreate(
+        object_type="Contact",
+        object_name=f"Contact-{created_contact.id}",
+        activity=HistorySchema.ActivityEnum.CREATE,
+    )
+    payload = ContactSchema.ContactCreate(**created_contact.__dict__).model_dump()
+    HistoryService.create_history(
+        db, history_create, created_contact.id, payload, current_user
+    )
     return created_contact
 
 
@@ -55,10 +64,28 @@ def update_contact(
         if db_contact.image_id:
             ImageService.delete_image(db, db_contact.image_id)
     ContactRepository.update_contact(db, contact_id, update_data, current_user)
+    history_create = HistorySchema.HistoryCreate(
+        object_type="Contact",
+        object_name=f"Contact-{db_contact.id}",
+        activity=HistorySchema.ActivityEnum.UPDATE,
+    )
+    payload = update_data
+    HistoryService.create_history(
+        db, history_create, db_contact.id, payload, current_user
+    )
 
 
-def delete_contact(db: Session, contact_id: int):
+def delete_contact(db: Session, contact_id: int, current_user: UserSchema.User):
     db_contact = get_contact(db, contact_id)
     if db_contact.image_id:
-        ImageService.delete_image()
+        ImageService.delete_image(db, db_contact.image_id)
+    history_create = HistorySchema.HistoryCreate(
+        object_type="Contact",
+        object_name=f"Contact-{db_contact.id}",
+        activity=HistorySchema.ActivityEnum.DELETE,
+    )
+    payload = {}
+    HistoryService.create_history(
+        db, history_create, db_contact.id, payload, current_user
+    )
     ContactRepository.delete_contact(db, contact_id)

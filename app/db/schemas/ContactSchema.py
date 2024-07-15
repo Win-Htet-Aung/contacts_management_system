@@ -17,6 +17,8 @@ class GenderEnum(str, Enum):
 
 
 class ContactBase(BaseModel):
+    middle_name: str | None = None
+    last_name: str | None = None
     phone: str | None = None
     company_name: str | None = None
     birth_date: date | None = None
@@ -31,9 +33,7 @@ class ContactBase(BaseModel):
 
 
 class ContactCreate(ContactBase):
-    first_name: str = ""
-    middle_name: str = ""
-    last_name: str = ""
+    first_name: str
     category: ContactCategoryEnum
     gender: GenderEnum
     email: str
@@ -41,8 +41,6 @@ class ContactCreate(ContactBase):
 
 class ContactUpdate(ContactBase):
     first_name: str | None = None
-    middle_name: str | None = None
-    last_name: str | None = None
     category: ContactCategoryEnum | None = None
     gender: GenderEnum | None = None
     email: str | None = None

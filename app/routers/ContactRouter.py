@@ -126,7 +126,7 @@ def delete_contact(
             UserSchema.UserRoleEnum.ADMIN,
             UserSchema.UserRoleEnum.STAFF,
         ]:
-            ContactService.delete_contact(db, contact_id)
+            ContactService.delete_contact(db, contact_id, current_user)
             return Response(None, status_code=status.HTTP_204_NO_CONTENT)
         else:
             raise HTTPException(status_code=status.HTTP_403_FORBIDDEN)
